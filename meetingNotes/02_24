@@ -1,9 +1,14 @@
+Software aspects:
+	- scale: UMLS (Unified Medical Language System)
 
-- scale: UMLS (Unified Medical Language System)
+	- match tokens in user's input with symptoms
+	  link symptoms to diseases
 
-- match tokens in user's input with symptoms
-- link symptoms to diseases
+	- candidate lists each mapping to sevral symptoms
 
-- candidate lists each mapping to sevral symptoms
+	- wordlist TRIE (Term matching)
+	
+	- UI design/ different screens/ interactions
 
-- wordlist TRIE (Term matching)
+Documents:
+	Deadline: before midterm (around 03/15)
