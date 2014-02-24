@@ -1,0 +1,9 @@
+
+- scale: UMLS (Unified Medical Language System)
+
+- match tokens in user's input with symptoms
+- link symptoms to diseases
+
+- candidate lists each mapping to sevral symptoms
+
+- wordlist TRIE (Term matching)
