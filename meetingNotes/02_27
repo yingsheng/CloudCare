@@ -1,0 +1,15 @@
+Meeting Notes 02/27
+- Standard data
+  Dictionary of diseases: ICD 9 / ICD 10
+  Dictionary of symptoms: SnowMed? / Wikipedia / PubMed / WebMd
+
+- Consider graphic user interface
+  WebMD symptom checker
+
+- Plan for next week
+  Expand disease set to 40 
+  Change the database schema (dis: sym sym sym ...)
+  Return multiple diseases to a query
+  Integrate InputFormat with baseline system
+
+
