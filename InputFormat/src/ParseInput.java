@@ -39,13 +39,11 @@ public class ParseInput {
         StopWords.add(tmpStr);
       }
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     try {
       br.close();
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
@@ -78,6 +76,7 @@ public class ParseInput {
         if(usefulValue.get(i).equals(StopWords.get(j)))
         {
           usefulValue.remove(i);
+          i--;
           break;
         }
       }
@@ -89,14 +88,19 @@ public class ParseInput {
   /* A simple test for parser. */
   public static void main(String [] args) throws IOException
   {
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    System.out.println("Please briefly describe your symptom:");
-    String inputString = br.readLine();
     ParseInput PI = new ParseInput();
-    ArrayList<String> usefulValue = PI.getSymptoms(inputString);
-    for(int i = 0; i < usefulValue.size(); i++)
+    while(true)
     {
-      System.out.println(usefulValue.get(i));
+      System.out.println("");
+      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+      System.out.println("Please briefly describe your symptom:");
+      String inputString = br.readLine();
+      ArrayList<String> usefulValue = PI.getSymptoms(inputString);
+      System.out.println("Potential useful information from your input:");
+      for(int i = 0; i < usefulValue.size(); i++)
+      {
+        System.out.println(usefulValue.get(i));
+      }
     }
   }
 }
