@@ -1,0 +1,21 @@
+Plan for this week:
+	Merge big datatbase with web.
+	Impelement a simple Asker (interrogator).
+	Weekly Reporting_Form.
+
+Differences from WebMD:
+	plain text input
+	interactive
+	educative method (proactive intelligent)
+
+Long term ideas:
+	adding voice support (both for input and output)
+	suggest clinical test they need
+	suggest doctor/hospital localtion (matching symptoms)
+	where the disease comes from
+
+Business customer:
+	Insurance Company:
+		Deploy areas: USA, Europe, Australia, Japan, Hongkong
+	Remote Area:
+		cash flow / revenue driven
