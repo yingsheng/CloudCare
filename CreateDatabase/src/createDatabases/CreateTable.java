@@ -1,3 +1,4 @@
+package createDatabases;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -90,9 +91,9 @@ public class CreateTable {
       Statement st = null;
       ResultSet rs = null;
 
-      String url = "jdbc:mysql://localhost:3306/CloudCare"; /* You need to create a database called "CloudCare" */
-      String user = "pqichen";/* put your user id here */ //"pqichen";
-      String password = "pqichen";/* put your password here */ //"pqichen";
+      String url = "jdbc:mysql://localhost/CloudCare"; /* You need to create a database called "CloudCare" */
+      String user = "root";/* put your user id here */ //"pqichen";
+      String password = "mypass";/* put your password here */ //"pqichen";
       try {
           Class.forName("com.mysql.jdbc.Driver").newInstance(); 
           con = DriverManager.getConnection(url, user, password);
