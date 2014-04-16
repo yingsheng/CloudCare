@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 <%@ page import="java.util.*" %>
 <%@ page import="java.sql.*" %> 
 <%@ page import="java.io.*" %> 
 <%@ page import="parser.ParseInput" %>
+=======
+<%@ page import="java.sql.*" %> 
+<%@ page import="java.io.*" %> 
+<%@ page import="InputFormat/src/ParserInput.java" %>
+>>>>>>> pqichen
 
 <%@ page language="java" contentType="text/html; charset=US-ASCII"
     pageEncoding="US-ASCII"%>
@@ -19,19 +25,34 @@
 
 <html>
 <head>
+<<<<<<< HEAD
 <title>Take symptom input from user</title>
+=======
+<title>Take sympton input from user</title>
+>>>>>>> pqichen
 </head>
 
 <body>
 <center>
+<<<<<<< HEAD
 <h1>Please input your symptom here</h1>
 <form action="pqctest.jsp" method="GET">
 symptom: <input type="text" name="s1">
+=======
+<h1>Please input your sympton here</h1>
+<form action="sytest.jsp" method="GET">
+sympton: <input type="text" name="s1">
+>>>>>>> pqichen
 <input type="submit" value="Submit" />
 </form>
 </body>
 <%
+<<<<<<< HEAD
 	ParseInput PI = new ParseInput();
+=======
+    ParseInput PI = new ParseInput();
+
+>>>>>>> pqichen
 %>
 </html>
 
@@ -57,17 +78,30 @@ try {
     Statement stmt = connection.createStatement(); 
     ResultSet rs = stmt.executeQuery("SELECT disease FROM disease WHERE sympton1 LIKE 'coughing'");
     */
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> pqichen
     PreparedStatement pstmt;      
     pstmt = connection.prepareStatement("SELECT disease FROM disease WHERE sympton1 LIKE (?) or sympton2 Like (?)");  
     String sym1 = request.getParameter("s1");
     ArrayList<String> usefulValue = PI.getSymptoms(sym1);
+<<<<<<< HEAD
     
 	pstmt.setString(1,usefulValue.get(0));  
     pstmt.setString(2,usefulValue.get(0));  
     ResultSet rs2 = pstmt.executeQuery();
 	
     String x = usefulValue.get(0);
+=======
+
+	pstmt.setString(1,usefulValue.get(0));  
+    pstmt.setString(2,usefulValue.get(0));  
+    ResultSet rs2 = pstmt.executeQuery();
+
+    String x = null;
+>>>>>>> pqichen
     while (rs2.next()) {
         x = rs2.getString("disease");
     }
@@ -80,3 +114,9 @@ try {
 </font>
 </body> 
 </html>
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> pqichen
