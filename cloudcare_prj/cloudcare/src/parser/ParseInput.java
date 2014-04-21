@@ -26,14 +26,14 @@ public class ParseInput {
   public ParseInput()
   {
     /* Initialize parser */
-    lp = LexicalizedParser.loadModel("/Users/yingsheng/Documents/workspace_ee/cloudcare/englishPCFG.ser.gz");
+    lp = LexicalizedParser.loadModel("/Users/mengdayang/git/CloudCare/cloudcare_prj/cloudcare/englishPCFG.ser.gz");
     
     /* Initialize stopwords */
     StopWords = new ArrayList<String>();
     BufferedReader br = null;
     try {
       /* Notice that stopwords are sorted. */
-      br = new BufferedReader(new FileReader("/Users/yingsheng/Documents/workspace_ee/cloudcare/stopwords.txt"));
+      br = new BufferedReader(new FileReader("/Users/mengdayang/git/CloudCare/cloudcare_prj/cloudcare/stopwords.txt"));
       String tmpStr;
       while((tmpStr = br.readLine()) != null)
       {
