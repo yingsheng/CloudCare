@@ -1,0 +1,14 @@
+Plan for week Mar.27, 2014:
+	1.Merge big datatbase with current system.
+	2.Impledment a simple Asker (interrogator). asker: pick the most crucial symptom given the subtable
+	3.Weekly Reporting_Form.
+
+Result for week Mar.27, 2014:
+	1. done
+	2. not done
+	3. done
+	reason: Input and output of different modules should be unified before implementing any single module. 
+	note: So we've done something else. We unified the interfaces between each pair of modules, and write skeleton Java framework for each module.
+
+Plan for week Apr. 3, 2014:
+	1. Implement 4 modules with funtionality.
