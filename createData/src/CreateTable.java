@@ -19,7 +19,7 @@ public class CreateTable {
       ArrayList<String> sym = new ArrayList<String>();
       ArrayList<String> part = new ArrayList<String>();
       HashSet<String> checkDup = new HashSet<String>();
-      BufferedReader br = new BufferedReader(new FileReader("symptoms"));
+      BufferedReader br = new BufferedReader(new FileReader("unified_symptoms"));
       String line;
       while((line = br.readLine()) != null)
       {
@@ -32,7 +32,7 @@ public class CreateTable {
       br.close();
       
       checkDup.clear();
-      br = new BufferedReader(new FileReader("parts"));
+      br = new BufferedReader(new FileReader("unified_parts"));
       while((line = br.readLine()) != null)
       {
         if(!checkDup.contains(line))
