@@ -6,11 +6,11 @@ package parser;
  * 
  * Reference: this piece of code uses StanfordNLP parser.
  */
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -20,20 +20,21 @@ import edu.stanford.nlp.trees.Tree;
 public class ParseInput {
   /* ParseInput maintains a list of useless words */
   public static ArrayList<String> StopWords;
+  public StandardSymptomQuery stQuery;
   public LexicalizedParser lp;
   
   /* Constructor (fetching stopwords from "stopwords.txt")*/
-  public ParseInput()
+  public ParseInput() throws InstantiationException, IllegalAccessException, ClassNotFoundException 
   {
     /* Initialize parser */
-    lp = LexicalizedParser.loadModel("/Users/mengdayang/git/CloudCare/cloudcare_prj/cloudcare/englishPCFG.ser.gz");
+    lp = LexicalizedParser.loadModel("englishPCFG.ser.gz");
     
     /* Initialize stopwords */
     StopWords = new ArrayList<String>();
     BufferedReader br = null;
     try {
       /* Notice that stopwords are sorted. */
-      br = new BufferedReader(new FileReader("/Users/mengdayang/git/CloudCare/cloudcare_prj/cloudcare/stopwords.txt"));
+      br = new BufferedReader(new FileReader("stopwords.txt"));
       String tmpStr;
       while((tmpStr = br.readLine()) != null)
       {
@@ -47,10 +48,13 @@ public class ParseInput {
     } catch (IOException e) {
       e.printStackTrace();
     }
+    
+    /* Initialize StandardSymptomQuery*/
+    stQuery = new StandardSymptomQuery();
   }
   
   /* Fetch user input string, return an arraylist of useful strings */
-  public ArrayList<String> getSymptoms(String inputString)
+  public ArrayList<String> FormatInput(String inputString)
   {
     /* Get tree stucture of a sentence */
     Tree InputParser = lp.parse(inputString);
@@ -86,22 +90,44 @@ public class ParseInput {
     return usefulValue;
   }
   
-  /* A simple test for parser. */
-  
-  public static void main(String [] args) throws IOException
+  public ArrayList<ArrayList<String>> getStandard(String inputString) throws SQLException
   {
-    ParseInput PI = new ParseInput();
+    ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+    result.add(new ArrayList<String>());
+    result.add(new ArrayList<String>());
+    ArrayList<String> keywords = new ArrayList<String>();
+    keywords = this.FormatInput(inputString);
+    
+    for(int i = 0; i < keywords.size(); i++)
+    {
+      String tmpPart = stQuery.getStandardPart(keywords.get(i));
+      String tmpSymptom = stQuery.getStandardSymptom(keywords.get(i));
+      if(!(tmpPart == null))  result.get(0).add(tmpPart);
+      if(!(tmpSymptom == null)) result.get(1).add(tmpSymptom);
+    }
+    
+    return result;
+  }
+  
+  /* A simple test for parser. */
+  public static void main(String [] args) throws IOException, SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException
+  {
+    ParseInput KE = new ParseInput();
     while(true)
     {
       System.out.println("");
       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
       System.out.println("Please briefly describe your symptom:");
       String inputString = br.readLine();
-      ArrayList<String> usefulValue = PI.getSymptoms(inputString);
+      ArrayList<ArrayList<String>> result = KE.getStandard(inputString);
       System.out.println("Potential useful information from your input:");
-      for(int i = 0; i < usefulValue.size(); i++)
+      for(int i = 0; i < result.get(0).size() && i < result.get(1).size(); i++)
       {
-        System.out.println(usefulValue.get(i));
+        System.out.println(result.get(0).get(i) + "$" + result.get(1).get(i));
+      }
+      for(int i = 0; i < result.get(1).size(); i++)
+      {
+        System.out.println("null" + "$" + result.get(1).get(i));
       }
     }
   }
