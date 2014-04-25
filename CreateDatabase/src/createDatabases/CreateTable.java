@@ -1,4 +1,5 @@
 package createDatabases;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -18,14 +19,13 @@ public class CreateTable {
 
     public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
       ArrayList<String> sym = new ArrayList<String>();
-      ArrayList<String> part = new ArrayList<String>();
       ArrayList<String> disease = new ArrayList<String>();
       HashSet<String> checkDup = new HashSet<String>();
-      BufferedReader br = new BufferedReader(new FileReader("symptoms"));
+      BufferedReader br = new BufferedReader(new FileReader("unified_symptoms"));
       String line;
       while((line = br.readLine()) != null)
       {
-        line.toLowerCase();
+        line = line.toLowerCase();
         if(!checkDup.contains(line))
         {
           sym.add(line);
@@ -35,25 +35,10 @@ public class CreateTable {
       br.close();
       
       checkDup.clear();
-      br = new BufferedReader(new FileReader("parts"));
-      while((line = br.readLine()) != null)
-      {
-        line.toLowerCase();
-        if(!checkDup.contains(line))
-        {
-          part.add(line);
-          checkDup.add(line);
-        }
-      }
-      br.close();
-
-      checkDup.clear();
       br = new BufferedReader(new FileReader("disease"));
       while((line = br.readLine()) != null)
       {
-
-        //System.out.println(line);
-        line.toLowerCase();
+        line = line.toLowerCase();
         if(!checkDup.contains(line))
         {
           disease.add(line);
@@ -61,19 +46,9 @@ public class CreateTable {
         }
       }
       br.close();
-      
-      Collections.sort(part);
+
       Collections.sort(sym);
       Collections.sort(disease);
-      
-      for(int i = 0; i < part.size() - 1; i++)
-      {
-        if(part.get(i + 1).equals(part.get(i)))
-        {
-          part.remove(i + 1);
-          i--;
-        }
-      }
       
       for(int i = 0; i < sym.size() - 1; i++)
       {
@@ -84,19 +59,14 @@ public class CreateTable {
         }
       }
       
-      ArrayList<String> comb = new ArrayList<String>();
-      for(int i = 0; i < sym.size(); i++)
+      for(int i = 0; i < disease.size() - 1; i++)
       {
-        for(int j = 0; j < part.size(); j++)
+        if(disease.get(i + 1).equals(disease.get(i)))
         {
-          String tmp = part.get(j) + "$" + sym.get(i);
-          comb.add(tmp);
+          disease.remove(i + 1);
+          i--;
         }
-        String tmp = "null$" + sym.get(i);
-        comb.add(tmp);
       }
-      
-
       
       Connection con = null;
       Statement st = null;
@@ -104,7 +74,7 @@ public class CreateTable {
 
       String url = "jdbc:mysql://localhost/CloudCare"; /* You need to create a database called "CloudCare" */
       String user = "root";/* put your user id here */ //"pqichen";
-      String password = "pqc1991526";/* put your password here */ //"pqichen";
+      String password = "mypass";/* put your password here */ //"pqichen";
       try {
           Class.forName("com.mysql.jdbc.Driver").newInstance(); 
           con = DriverManager.getConnection(url, user, password);
@@ -112,12 +82,12 @@ public class CreateTable {
           
           String sql = "CREATE TABLE disease_data (disease VARCHAR(50),";
           
-          for(int i = 0; i < comb.size() - 1; i++)
+          for(int i = 0; i < sym.size() - 1; i++)
           {
-            //System.out.println(comb.get(i));
-            sql += comb.get(i) + " INTEGER, ";
+            System.out.println(sym.get(i));
+            sql += sym.get(i) + " INTEGER, ";
           }
-          sql += comb.get(comb.size() - 1) + " INTEGER);";
+          sql += sym.get(sym.size() - 1) + " INTEGER);";
           //System.out.println(Integer.toString(comb.size()));
           st.executeUpdate(sql);
           
@@ -132,8 +102,6 @@ public class CreateTable {
           //System.out.println(sql);
           st.executeUpdate(sql);
           
-          sql = "CREATE TABLE standard_part (part VARCHAR(100));";
-          st.executeUpdate(sql);
           sql = "CREATE TABLE standard_symptom (symptom VARCHAR(100));";
           st.executeUpdate(sql);
           for(int i = 0; i < sym.size(); i++)
@@ -141,83 +109,75 @@ public class CreateTable {
             sql = "INSERT INTO standard_symptom (symptom) VALUES ('" + sym.get(i) + "');";
             st.executeUpdate(sql); 
           }
-          for(int i = 0; i < part.size(); i++)
-          {
-            sql = "INSERT INTO standard_part (part) VALUES ('" + part.get(i) + "');";
-            st.executeUpdate(sql); 
-          }
-          //System.out.println("Success");
-          sql = "INSERT INTO disease_data (disease, navel$pulsate, abdomen$pain) VALUES ('abdominal_aortic_aneurysm', 1, 1);";
+
+          sql = "INSERT INTO disease_data (disease, pulsate, abdomen, pain) VALUES ('abdominal_aortic_aneurysm', 1, 1, 1);";
           st.executeUpdate(sql);
-          sql = "INSERT INTO disease_data (disease, eye$vision, null$nausea) VALUES ('glaucoma', 1, 1);";
+          sql = "INSERT INTO disease_data (disease, vision, nausea) VALUES ('glaucoma', 1, 1);";
           st.executeUpdate(sql);
-          sql = "INSERT INTO disease_data (disease, eye$pain, eye$vision, null$nausea, null$vomiting) VALUES ('angle_closure_glaucoma', 1, 1, 1, 1);";
+          sql = "INSERT INTO disease_data (disease, pain, vision, nausea, vomiting) VALUES ('angle_closure_glaucoma', 1, 1, 1, 1);";
           st.executeUpdate(sql);
-          sql = "INSERT INTO disease_data (disease, arm$tingle, arm$weakness) VALUES ('cervical_spondylosis', 1, 1);";
+          sql = "INSERT INTO disease_data (disease, tingle, weakness) VALUES ('cervical_spondylosis', 1, 1);";
           st.executeUpdate(sql);
-          sql = "INSERT INTO disease_data (disease, mouth$thirst, urine$urination) VALUES ('diabetes',1 ,1);";
+          sql = "INSERT INTO disease_data (disease, thirst, urination) VALUES ('diabetes',1 ,1);";
           st.executeUpdate(sql);
-          sql = "INSERT INTO disease_data (disease, chest$pain, chest$angina) VALUES ('cardiovascular_disease', 1, 1);";
+          sql = "INSERT INTO disease_data (disease, pain, angina) VALUES ('cardiovascular_disease', 1, 1);";
           st.executeUpdate(sql);
-          sql = "INSERT INTO disease_data (disease, feel$unhappyness, feel$sadness) VALUES ('depression', 1, 1);";
+          sql = "INSERT INTO disease_data (disease, unhappyness, sadness) VALUES ('depression', 1, 1);";
           st.executeUpdate(sql);
-          sql = "INSERT INTO disease_data (disease, abdomen$gnawing, null$nausea, null$vomiting) VALUES ('gastritis', 1, 1, 1);";
+          sql = "INSERT INTO disease_data (disease, abdomen, gnawing, nausea, vomiting) VALUES ('gastritis', 1, 1, 1, 1);";
           st.executeUpdate(sql);
-          sql = "INSERT INTO disease_data (disease, null$coughing, null$sneezing) VALUES ('common_cold', 1, 1);";
+          sql = "INSERT INTO disease_data (disease, coughing, sneezing) VALUES ('common_cold', 1, 1);";
           st.executeUpdate(sql);
-          sql = "INSERT INTO disease_data (disease, null$stools, null$dehydration) VALUES ('diarrhea', 1, 1);";
+          sql = "INSERT INTO disease_data (disease, stools, dehydration) VALUES ('diarrhea', 1, 1);";
           st.executeUpdate(sql);
-          sql = "INSERT INTO disease_data (disease, joint$pain, null$stiffness) VALUES ('arthritis', 1, 1);";
+          sql = "INSERT INTO disease_data (disease, pain, stiffness) VALUES ('arthritis', 1, 1);";
           st.executeUpdate(sql);
-          sql = "INSERT INTO disease_data (disease, chest$pain, back$discomfort) VALUES ('heart_attack', 1, 1);";
+          sql = "INSERT INTO disease_data (disease, pain, discomfort) VALUES ('heart_attack', 1, 1);";
           st.executeUpdate(sql);         
             
-          sql = "INSERT INTO symptom_data (symptom, abdominal_aortic_aneurysm) VALUES ('navel$pulsate', 1);";
+          sql = "INSERT INTO symptom_data (symptom, abdominal_aortic_aneurysm) VALUES ('pulsate', 1);";
           st.executeUpdate(sql);         
-          sql = "INSERT INTO symptom_data (symptom, abdominal_aortic_aneurysm) VALUES ('abdomen$pain', 1);";
+          sql = "INSERT INTO symptom_data (symptom, abdominal_aortic_aneurysm, gastritis) VALUES ('abdomen', 1, 1);";
+          st.executeUpdate(sql);     
+          sql = "INSERT INTO symptom_data (symptom, abdominal_aortic_aneurysm, angle_closure_glaucoma, heart_attack, arthritis, cardiovascular_disease) VALUES ('pain', 1, 1, 1, 1, 1);";
           st.executeUpdate(sql);         
-          sql = "INSERT INTO symptom_data (symptom, glaucoma, angle_closure_glaucoma) VALUES ('eye$vision', 1, 1);";
+          sql = "INSERT INTO symptom_data (symptom, glaucoma, angle_closure_glaucoma) VALUES ('vision', 1, 1);";
           st.executeUpdate(sql);         
-          sql = "INSERT INTO symptom_data (symptom, glaucoma, angle_closure_glaucoma) VALUES ('null$nausea', 1, 1);";
+          sql = "INSERT INTO symptom_data (symptom, glaucoma, angle_closure_glaucoma, gastritis) VALUES ('nausea', 1, 1, 1);";
           st.executeUpdate(sql);         
-          sql = "INSERT INTO symptom_data (symptom, angle_closure_glaucoma) VALUES ('null$vomiting', 1);";
+          sql = "INSERT INTO symptom_data (symptom, angle_closure_glaucoma, gastritis) VALUES ('vomiting', 1, 1);";
           st.executeUpdate(sql);         
-          sql = "INSERT INTO symptom_data (symptom, angle_closure_glaucoma) VALUES ('eye_pain', 1);";
+          sql = "INSERT INTO symptom_data (symptom, cervical_spondylosis) VALUES ('weakness', 1);";
           st.executeUpdate(sql);         
-          sql = "INSERT INTO symptom_data (symptom, cervical_spondylosis) VALUES ('arm$weakness', 1);";
+          sql = "INSERT INTO symptom_data (symptom, cervical_spondylosis) VALUES ('tingle', 1);";
           st.executeUpdate(sql);         
-          sql = "INSERT INTO symptom_data (symptom, cervical_spondylosis) VALUES ('arm$tingle', 1);";
+          sql = "INSERT INTO symptom_data (symptom, diabetes) VALUES ('thirst', 1);";
           st.executeUpdate(sql);         
-          sql = "INSERT INTO symptom_data (symptom, diabetes) VALUES ('mouth$thirst', 1);";
-          st.executeUpdate(sql);         
-          sql = "INSERT INTO symptom_data (symptom, diabetes) VALUES ('urine$urination', 1);";
+          sql = "INSERT INTO symptom_data (symptom, diabetes) VALUES ('urination', 1);";
           st.executeUpdate(sql);    
-          sql = "INSERT INTO symptom_data (symptom, diabetes) VALUES ('null$weight', 1);";
+          sql = "INSERT INTO symptom_data (symptom, diabetes) VALUES ('weight', 1);";
           st.executeUpdate(sql);    
-          sql = "INSERT INTO symptom_data (symptom, cardiovascular_disease) VALUES ('chest$angina', 1);";
+          sql = "INSERT INTO symptom_data (symptom, cardiovascular_disease) VALUES ('angina', 1);";
           st.executeUpdate(sql);    
-          sql = "INSERT INTO symptom_data (symptom, cardiovascular_disease, heart_attack) VALUES ('chest$pain', 1, 1);";
+          sql = "INSERT INTO symptom_data (symptom, depression) VALUES ('unhappyness', 1);";
           st.executeUpdate(sql);    
-          sql = "INSERT INTO symptom_data (symptom, depression) VALUES ('feel$unhappyness', 1);";
-          st.executeUpdate(sql);    
-          sql = "INSERT INTO symptom_data (symptom, depression) VALUES ('feel$sadness', 1);";
+          sql = "INSERT INTO symptom_data (symptom, depression) VALUES ('sadness', 1);";
           st.executeUpdate(sql); 
-          sql = "INSERT INTO symptom_data (symptom, common_cold) VALUES ('null$coughing', 1);";
+          sql = "INSERT INTO symptom_data (symptom, common_cold) VALUES ('coughing', 1);";
           st.executeUpdate(sql); 
-          sql = "INSERT INTO symptom_data (symptom, common_cold) VALUES ('null$sneezing', 1);";
+          sql = "INSERT INTO symptom_data (symptom, common_cold) VALUES ('sneezing', 1);";
           st.executeUpdate(sql); 
-          sql = "INSERT INTO symptom_data (symptom, diarrhea) VALUES ('null$stools', 1);";
+          sql = "INSERT INTO symptom_data (symptom, diarrhea) VALUES ('stools', 1);";
           st.executeUpdate(sql); 
-          sql = "INSERT INTO symptom_data (symptom, diarrhea) VALUES ('null$dehydration', 1);";
+          sql = "INSERT INTO symptom_data (symptom, diarrhea) VALUES ('dehydration', 1);";
           st.executeUpdate(sql); 
-          sql = "INSERT INTO symptom_data (symptom, arthritis) VALUES ('joint$pain', 1);";
+          sql = "INSERT INTO symptom_data (symptom, arthritis) VALUES ('stiffness', 1);";
           st.executeUpdate(sql); 
-          sql = "INSERT INTO symptom_data (symptom, arthritis) VALUES ('null$stiffness', 1);";
-          st.executeUpdate(sql); 
-          sql = "INSERT INTO symptom_data (symptom, heart_attack) VALUES ('back$discomfort', 1);";
+          sql = "INSERT INTO symptom_data (symptom, heart_attack) VALUES ('discomfort', 1);";
           st.executeUpdate(sql); 
 
 
+          System.out.println("Success");
           
       } catch (SQLException ex) {
           Logger lgr = Logger.getLogger(CreateTable.class.getName());
